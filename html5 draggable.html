@@ -13,10 +13,6 @@
     border: 1px solid #aaaaaa;
 }
 
-#row1 {
-    background-color: chartreuse;
-}
-
 table {
     border: 1px solid #aaaaaa;
 }  
@@ -36,23 +32,41 @@ function disallowDrop(ev) {
 }
 
 function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+    ev.dataTransfer.setData("dragged row", ev.target.id);
 }
 
-function drop(ev) {
+function dropIntoTopTable(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target
+
+    var id = ev.dataTransfer.getData("dragged row");
+    var tr = $(`#${id}`);
+    $(tr)
+      .find("td:last")
+      .remove();
+
+    $(ev.target)
       .closest("table")
-      .querySelector("tbody")
-      .appendChild(document.getElementById(data));
-    //$(ev.target).closest("table")
+      .find("tbody:first")
+      .append($(tr));
+}
+
+function dropIntoBottomTable(ev) {
+    ev.preventDefault();
+
+    var id = ev.dataTransfer.getData("dragged row");
+    var tr = $(`#${id}`);
+    $(tr).append("<td><Button>Do It</Button></td>");
+
+    $(ev.target)
+      .closest("table")
+      .find("tbody:first")
+      .append($(tr));
 }
 </script>
 </head>
 <body>
 
-<table ondrop="drop(event)" ondragover="allowDrop(event)">
+<table ondrop="dropIntoTopTable(event)" ondragover="allowDrop(event)">
   <thead>
      <tr>
        <th>Col 1</th>
@@ -67,17 +81,19 @@ function drop(ev) {
   </tbody>
 </table>
 <br />
-<table ondrop="drop(event)" ondragover="allowDrop(event)">
+<table ondrop="dropIntoBottomTable(event)" ondragover="allowDrop(event)">
   <thead>
      <tr>
        <th>Col 1</th>
        <th>Col 2</th>
-     </tr>
+       <td></td>
+      </tr>
   </thead>
   <tbody>
     <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
       <td>Cell 3</td>
       <td>Cell 4</td>
+      <td><Button>Do It</Button></td>
     </tr>
   </tbody>
 </table>
