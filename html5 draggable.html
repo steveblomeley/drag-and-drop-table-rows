@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+<style>
+#div1, #div2 {
+    width: 350px;
+    height: 70px;
+    padding: 10px;
+    border: 1px solid #aaaaaa;
+}
+
+#row1 {
+    background-color: chartreuse;
+}
+
+table {
+    border: 1px solid #aaaaaa;
+}  
+
+tbody {
+    margin: 10px;
+    padding: 10px;
+}
+
+</style>
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function disallowDrop(ev) {
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target
+      .closest("table")
+      .querySelector("tbody")
+      .appendChild(document.getElementById(data));
+    //$(ev.target).closest("table")
+}
+</script>
+</head>
+<body>
+
+<table ondrop="drop(event)" ondragover="allowDrop(event)">
+  <thead>
+     <tr>
+       <th>Col 1</th>
+       <th>Col 2</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr id="row1" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+      <td>Cell 1</td>
+      <td>Cell 2</td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<table ondrop="drop(event)" ondragover="allowDrop(event)">
+  <thead>
+     <tr>
+       <th>Col 1</th>
+       <th>Col 2</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+      <td>Cell 3</td>
+      <td>Cell 4</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
