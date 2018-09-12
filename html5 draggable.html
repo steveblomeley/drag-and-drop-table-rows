@@ -1,102 +1,123 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.js"
-    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    crossorigin="anonymous"></script>
-<style>
-#div1, #div2 {
-    width: 350px;
-    height: 70px;
-    padding: 10px;
-    border: 1px solid #aaaaaa;
-}
+    <head>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+        </script>
 
-table {
-    border: 1px solid #aaaaaa;
-}  
+        <style>
+            #div1, #div2 {
+                width: 350px;
+                height: 70px;
+                padding: 10px;
+                border: 1px solid #aaaaaa;
+            }
 
-tbody {
-    margin: 10px;
-    padding: 10px;
-}
+            table {
+                border: 1px solid #aaaaaa;
+            }  
 
-</style>
-<script>
-function allowDrop(ev) {
-    ev.preventDefault();
-}
+            tbody {
+                margin: 10px;
+                padding: 10px;
+            }
 
-function disallowDrop(ev) {
-}
+            .table-placeholder{
+                background-color: lightgray;
+                padding: 10px;
+            }
 
-function drag(ev) {
-    ev.dataTransfer.setData("dragged row", ev.target.id);
-}
+            .invisible {
+                visibility: collapse;
+            }
+        </style>
 
-function dropIntoTopTable(ev) {
-    ev.preventDefault();
+        <script>
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
 
-    var id = ev.dataTransfer.getData("dragged row");
-    var tr = $(`#${id}`);
-    $(tr)
-      .find("td:last")
-      .remove();
+            function disallowDrop(ev) {
+            }
 
-    $(ev.target)
-      .closest("table")
-      .find("tbody:first")
-      .append($(tr));
-}
+            function drag(ev) {
+                ev.dataTransfer.setData("dragged row", ev.target.id);
+            }
 
-function dropIntoBottomTable(ev) {
-    ev.preventDefault();
+            function dropIntoTopTable(ev) {
+                ev.preventDefault();
 
-    var id = ev.dataTransfer.getData("dragged row");
-    var tr = $(`#${id}`);
-    $(tr).append("<td><Button>Do It</Button></td>");
+                var id = ev.dataTransfer.getData("dragged row");
+                var tr = $(`#${id}`);
+                $(tr)
+                    .find("td:last")
+                    .remove();
 
-    $(ev.target)
-      .closest("table")
-      .find("tbody:first")
-      .append($(tr));
-}
-</script>
-</head>
-<body>
+                $(ev.target)
+                    .closest("table")
+                    .find("tbody:first")
+                    .append($(tr));
+                
+                if ($("#table-locations-to-validate tbody tr").length == 1){
+                    $("#table-placeholder-row")
+                        .removeClass("invisible");
+                }
+            }
 
-<table ondrop="dropIntoTopTable(event)" ondragover="allowDrop(event)">
-  <thead>
-     <tr>
-       <th>Col 1</th>
-       <th>Col 2</th>
-     </tr>
-  </thead>
-  <tbody>
-    <tr id="row1" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-      <td>Cell 1</td>
-      <td>Cell 2</td>
-    </tr>
-  </tbody>
-</table>
-<br />
-<table ondrop="dropIntoBottomTable(event)" ondragover="allowDrop(event)">
-  <thead>
-     <tr>
-       <th>Col 1</th>
-       <th>Col 2</th>
-       <td></td>
-      </tr>
-  </thead>
-  <tbody>
-    <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-      <td>Cell 3</td>
-      <td>Cell 4</td>
-      <td><Button>Do It</Button></td>
-    </tr>
-  </tbody>
-</table>
+            function dropIntoBottomTable(ev) {
+                ev.preventDefault();
 
-</body>
+                var id = ev.dataTransfer.getData("dragged row");
+                var tr = $(`#${id}`);
+                $(tr).append("<td><Button>Estimate</Button></td>");
+
+                $(ev.target)
+                    .closest("table")
+                    .find("tbody:first")
+                    .append($(tr));
+                
+                $("#table-placeholder-row")
+                    .addClass("invisible");
+            }
+        </script>
+    </head>
+    <body>
+        <table ondrop="dropIntoTopTable(event)" ondragover="allowDrop(event)">
+            <thead>
+                <tr>
+                    <th>Col 1</th>
+                    <th>Col 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="row1" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                    <td>Cell 1</td>
+                    <td>Cell 2</td>
+                </tr>
+                <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                    <td>Cell A</td>
+                    <td>Cell B</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+
+        <table id="table-locations-to-validate" ondrop="dropIntoBottomTable(event)" ondragover="allowDrop(event)">
+            <thead>
+                <tr>
+                    <th>Col 1</th>
+                    <th>Col 2</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="table-placeholder-row">
+                    <td class="table-placeholder" colspan="3">Drag locations to estimate from the table above and drop them here.</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
 </html>
