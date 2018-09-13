@@ -124,6 +124,13 @@
 
             var id = ev.dataTransfer.getData("dragged row");
             var tr = $(`#${id}`);
+
+            var isRowAlreadyInTable = $(ev.target)
+                .closest("table")
+                .find(`#${id}`);
+
+            if (isRowAlreadyInTable.length > 0) return false;
+
             $(tr)
                 .find("td[data-estimate-in]")
                 .remove();
@@ -155,6 +162,12 @@
 
             var id = ev.dataTransfer.getData("dragged row");
             var tr = $(`#${id}`);
+            
+            var isRowAlreadyInTable = $(ev.target)
+                .closest("table")
+                .find(`#${id}`);
+
+            if (isRowAlreadyInTable.length > 0) return false;
 
             $(tr)    
                 .append("<td data-estimate-in>&mdash;</td>")
