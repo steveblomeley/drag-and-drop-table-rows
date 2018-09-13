@@ -135,7 +135,9 @@
         }
 
         $(document).ready(function(){
-            alert('hi');
+            $('body').on('click', '[data-use-toggle]', function () {
+                $(this).closest('tr').toggleClass("disabled");
+            });
         })
     </script>
 </head>
