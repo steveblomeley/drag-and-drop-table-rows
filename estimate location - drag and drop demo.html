@@ -180,6 +180,7 @@
                     if ($(this).hasClass("disabled")) return;
 
                     $(this)
+                        .addClass("disabled")
                         .closest("tr")
                         .addClass("disabled");
                     $(this)
