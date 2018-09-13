@@ -55,8 +55,15 @@
             padding: 10px;
         }
 
-        button{
+        button.active {
             background-color: #ef8c20;
+        }
+
+        button.fired {
+            background-color:limegreen;
+        }
+
+        button{
             color: white;
             font-weight: bold;
         }
@@ -74,8 +81,12 @@
             visibility: collapse;
         }
 
-        .disabled {
+        tr.disabled {
             background-color: #f5f5f5;
+            opacity: 0.5;
+        }
+
+        button.disabled {
             opacity: 0.5;
         }
 
@@ -115,6 +126,8 @@
             if ($("#table-locations-to-validate tbody tr").length == 1) {
                 $("#table-placeholder-row")
                     .removeClass("invisible");
+                $("#calculate-estimates")
+                    .addClass("disabled");
             }
         }
 
@@ -128,7 +141,8 @@
                 .find("td[data-use-toggle]")
                 .remove();
             $(tr)    
-                .append("<td data-revalidate-button><Button class='btn btn-xs'>Re-validate</Button></td>");
+                .append("<td data-revalidate-button><button class='btn btn-xs disabled active'>Save Estimates</Button></td>");
+
             $(ev.target)
                 .closest("table")
                 .find("tbody:first")
@@ -136,13 +150,38 @@
 
             $("#table-placeholder-row")
                 .addClass("invisible");
+            $("#calculate-estimates")
+                .removeClass("disabled");
         }
 
         $(document).ready(function(){
-            $('body').on('click', '[data-use-toggle]', function () {
-                $(this).closest('tr').toggleClass("disabled");
-            });
-        })
+            $('body')
+                .on('click', '[data-use-toggle]', function () {
+                    $(this).closest('tr').toggleClass("disabled");
+                })
+                .on('click', '#calculate-estimates', function() {
+                    calculateEstimates();
+                })
+                .on('click', 'td[data-revalidate-button] button', function() {
+                    if ($(this).hasClass("disabled")) return;
+
+                    $(this)
+                        .closest("tr")
+                        .addClass("disabled");
+                    $(this)
+                        .html("Saved")
+                        .removeClass("active")
+                        .addClass("fired");
+                });
+        });
+
+        function calculateEstimates(){
+            if ($(this).hasClass("disabled")) return;
+
+            $("#table-locations-to-validate [data-estimate-in]").html("123")
+            $("#table-locations-to-validate [data-estimate-out]").html("456")
+            $("td[data-revalidate-button] button").removeClass("disabled");
+        }
     </script>
 </head>
 
@@ -171,32 +210,31 @@
             </thead>
             <tbody>
                 <tr id="row1" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-                            <td>Ian's Boutique</td>
-                            <td>1</td>
-                            <td>8001</td>
-                            <td>8348</td>
-                            <td>16.4%</td>
-                            <td>16.6%</td>
-                            <td>&mdash;</td>
-                            <td>&mdash;</td>
-                            <td data-use-toggle>
-                                <i class="fa fa-check"></i>
-                            </td>
-                    </tr>
-                    <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-                            <td>House of Dan</td>
-                            <td>2</td>
-                            <td>1152</td>
-                            <td>1018</td>
-                            <td>2.4%</td>
-                            <td>2.0%</td>
-                            <td>&mdash;</td>
-                            <td>&mdash;</td>
-                            <td data-use-toggle>
-                                <i class="fa fa-check"></i>
-                            </td>
-                    </tr>
-                </tbody>
+                    <td>Ian's Boutique</td>
+                    <td>1</td>
+                    <td>8001</td>
+                    <td>8348</td>
+                    <td>16.4%</td>
+                    <td>16.6%</td>
+                    <td data-estimate-in>&mdash;</td>
+                    <td data-estimate-out>&mdash;</td>
+                    <td data-use-toggle>
+                        <i class="fa fa-check"></i>
+                    </td>
+                </tr>
+                <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                    <td>House of Dan</td>
+                    <td>2</td>
+                    <td>1152</td>
+                    <td>1018</td>
+                    <td>2.4%</td>
+                    <td>2.0%</td>
+                    <td data-estimate-in>&mdash;</td>
+                    <td data-estimate-out>&mdash;</td>
+                    <td data-use-toggle>
+                        <i class="fa fa-check"></i>
+                    </td>
+                </tr>
                 <tr id="row3" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
                     <td>Chez Lorna</td>
                     <td>3</td>
@@ -204,8 +242,8 @@
                     <td>8348</td>
                     <td>16.4%</td>
                     <td>16.6%</td>
-                    <td>&mdash;</td>
-                    <td>&mdash;</td>
+                    <td data-estimate-in>&mdash;</td>
+                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
@@ -217,8 +255,8 @@
                     <td>1018</td>
                     <td>2.4%</td>
                     <td>2.0%</td>
-                    <td>&mdash;</td>
-                    <td>&mdash;</td>
+                    <td data-estimate-in>&mdash;</td>
+                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
@@ -230,25 +268,25 @@
 
         <table id="table-locations-to-validate" ondrop="dropIntoBottomTable(event)" ondragover="allowDrop(event)">
             <thead>
-                    <tr>
-                            <th colspan="2"></th>
-                            <th colspan="2">Validated</th>
-                            <th colspan="2">Weight</th>
-                            <th colspan="2">Estimate</th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th>Location Name</th>
-                            <th>Number</th>
-                            <th>In</th>
-                            <th>Out</th>
-                            <th>In</th>
-                            <th>Out</th>
-                            <th>In</th>
-                            <th>Out</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2">Validated</th>
+                    <th colspan="2">Weight</th>
+                    <th colspan="2">Estimate</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>Location Name</th>
+                    <th>Number</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th></th>
+                </tr>
+            </thead>
             <tbody>
                 <tr id="table-placeholder-row">
                     <td class="table-placeholder" colspan="9">Drag the locations that you want to estimate from the table above and drop them
@@ -256,6 +294,8 @@
                 </tr>
             </tbody>
         </table>
+        <br />
+        <button class="btn btn-small disabled active" id="calculate-estimates">Calculate Estimates</button>
     </div>
 </body>
 
