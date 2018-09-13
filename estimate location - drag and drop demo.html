@@ -93,6 +93,10 @@
         div.container {
             margin: 20px;
         }
+
+        .centered {
+            text-align: center;
+        }
     </style>
 
     <script>
@@ -122,7 +126,7 @@
                 .find("td[data-revalidate-button]")
                 .remove();
             $(tr)    
-                .append("<td data-use-toggle><i class='fa fa-check'></i></td>")
+                .append("<td data-use-toggle class='centered'><i class='fa fa-check'></i></td>")
                 .removeClass("disabled");
 
             $(ev.target)
@@ -202,9 +206,9 @@
             <thead>
                 <tr>
                     <th colspan="2"></th>
-                    <th colspan="2">Validated</th>
-                    <th colspan="2">Weight</th>
-                    <th>Use</th>
+                    <th colspan="2" class="centered">Validated</th>
+                    <th colspan="2" class="centered">Weight</th>
+                    <th class="centered">Use for</th>
                 </tr>
                 <tr>
                     <th>Location Name</th>
@@ -213,7 +217,7 @@
                     <th>Out</th>
                     <th>In</th>
                     <th>Out</th>
-                    <th></th>
+                    <th class="centered">Estimation?</th>
                 </tr>
             </thead>
             <tbody>
@@ -224,7 +228,7 @@
                     <td>8348</td>
                     <td>16.4%</td>
                     <td>16.6%</td>
-                    <td data-use-toggle>
+                    <td data-use-toggle class="centered">
                         <i class="fa fa-check"></i>
                     </td>
                 </tr>
@@ -235,7 +239,7 @@
                     <td>1018</td>
                     <td>2.4%</td>
                     <td>2.0%</td>
-                    <td data-use-toggle>
+                    <td data-use-toggle class="centered">
                         <i class="fa fa-check"></i>
                     </td>
                 </tr>
@@ -246,7 +250,7 @@
                     <td>8348</td>
                     <td>16.4%</td>
                     <td>16.6%</td>
-                    <td data-use-toggle>
+                    <td data-use-toggle class="centered">
                         <i class="fa fa-check"></i>
                     </td>
                 </tr>
@@ -257,7 +261,7 @@
                     <td>1018</td>
                     <td>2.4%</td>
                     <td>2.0%</td>
-                    <td data-use-toggle>
+                    <td data-use-toggle class="centered">
                         <i class="fa fa-check"></i>
                     </td>
                 </tr>
@@ -270,9 +274,9 @@
             <thead>
                 <tr>
                     <th colspan="2"></th>
-                    <th colspan="2">Validated</th>
-                    <th colspan="2">Weight</th>
-                    <th colspan="2">Estimate</th>
+                    <th colspan="2" class="centered">Validated</th>
+                    <th colspan="2" class="centered">Weight</th>
+                    <th colspan="2" class="centered">Estimate</th>
                     <th></th>
                 </tr>
                 <tr>
