@@ -1,104 +1,221 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <script
-            src="https://code.jquery.com/jquery-3.3.1.js"
-            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-            crossorigin="anonymous">
-        </script>
 
-        <style>
-            #div1, #div2 {
-                width: 350px;
-                height: 70px;
-                padding: 10px;
-                border: 1px solid #aaaaaa;
-            }
+<head>
+    <script 
+        src="https://code.jquery.com/jquery-3.3.1.js" 
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" 
+        crossorigin="anonymous">
+    </script>
 
-            table {
-                border: 1px solid #aaaaaa;
-            }  
+    <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
 
-            tbody {
-                margin: 10px;
-                padding: 10px;
-            }
+    <script 
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous">
+    </script>
 
-            .table-placeholder{
-                background-color: lightgray;
-                padding: 10px;
-            }
+    <link 
+        rel="stylesheet" 
+        href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" 
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" 
+        crossorigin="anonymous">
 
-            .invisible {
-                visibility: collapse;
-            }
-        </style>
+    <style>
+        #div1,
+        #div2 {
+            width: 350px;
+            height: 70px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
 
-        <script>
-            function allowDrop(ev) {
-                ev.preventDefault();
-            }
+        table {
+            border: 1px solid #aaaaaa;
+        }
 
-            function disallowDrop(ev) {
-            }
+        thead {
+            background-color: lightgray;
+        }
 
-            function drag(ev) {
-                ev.dataTransfer.setData("dragged row", ev.target.id);
-            }
+        th, td {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
 
-            function dropIntoTopTable(ev) {
-                ev.preventDefault();
+        tbody {
+            margin: 10px;
+            padding: 10px;
+        }
 
-                var id = ev.dataTransfer.getData("dragged row");
-                var tr = $(`#${id}`);
-                $(tr)
-                    .find("td:last")
-                    .remove();
+        button{
+            background-color: #ef8c20;
+            color: white;
+            font-weight: bold;
+        }
 
-                $(ev.target)
-                    .closest("table")
-                    .find("tbody:first")
-                    .append($(tr));
-                
-                if ($("#table-locations-to-validate tbody tr").length == 1){
-                    $("#table-placeholder-row")
-                        .removeClass("invisible");
-                }
-            }
+        i.fa-check {
+            color: lightgreen;
+        }
 
-            function dropIntoBottomTable(ev) {
-                ev.preventDefault();
+        .table-placeholder {
+            background-color: rgb(204, 255, 204);
+            padding: 10px;
+        }
 
-                var id = ev.dataTransfer.getData("dragged row");
-                var tr = $(`#${id}`);
-                $(tr).append("<td><Button>Estimate</Button></td>");
+        .invisible {
+            visibility: collapse;
+        }
 
-                $(ev.target)
-                    .closest("table")
-                    .find("tbody:first")
-                    .append($(tr));
-                
+        .disabled {
+            background-color: #f5f5f5;
+            opacity: 0.5;
+        }
+    </style>
+
+    <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function disallowDrop(ev) {
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("dragged row", ev.target.id);
+        }
+
+        function dropIntoTopTable(ev) {
+            ev.preventDefault();
+
+            var id = ev.dataTransfer.getData("dragged row");
+            var tr = $(`#${id}`);
+            $(tr)
+                .find("td[data-revalidate-button]")
+                .remove();
+            $(tr)    
+                .append("<td data-use-toggle><i class='fa fa-check'></i></td>");
+
+            $(ev.target)
+                .closest("table")
+                .find("tbody:first")
+                .append($(tr));
+
+            if ($("#table-locations-to-validate tbody tr").length == 1) {
                 $("#table-placeholder-row")
-                    .addClass("invisible");
+                    .removeClass("invisible");
             }
-        </script>
-    </head>
-    <body>
+        }
+
+        function dropIntoBottomTable(ev) {
+            ev.preventDefault();
+
+            var id = ev.dataTransfer.getData("dragged row");
+            var tr = $(`#${id}`);
+            $(tr)
+                .removeClass("disabled")
+                .find("td[data-use-toggle]")
+                .remove();
+            $(tr)    
+                .append("<td data-revalidate-button><Button class='btn btn-xs'>Re-validate</Button></td>");
+            $(ev.target)
+                .closest("table")
+                .find("tbody:first")
+                .append($(tr));
+
+            $("#table-placeholder-row")
+                .addClass("invisible");
+        }
+
+        $(document).ready(function(){
+            alert('hi');
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
         <table ondrop="dropIntoTopTable(event)" ondragover="allowDrop(event)">
             <thead>
                 <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
+                    <th colspan="2"></th>
+                    <th colspan="2">Validated</th>
+                    <th colspan="2">Weight</th>
+                    <th colspan="2">Estimate</th>
+                    <th>Use</th>
+                </tr>
+                <tr>
+                    <th>Location Name</th>
+                    <th>Number</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr id="row1" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-                    <td>Cell 1</td>
-                    <td>Cell 2</td>
+                            <td>Ian's Boutique</td>
+                            <td>1</td>
+                            <td>8001</td>
+                            <td>8348</td>
+                            <td>16.4%</td>
+                            <td>16.6%</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td data-use-toggle>
+                                <i class="fa fa-check"></i>
+                            </td>
+                    </tr>
+                    <tr id="row2" class="disabled" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                            <td>House of Dan</td>
+                            <td>2</td>
+                            <td>1152</td>
+                            <td>1018</td>
+                            <td>2.4%</td>
+                            <td>2.0%</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td data-use-toggle>
+                                <i class="fa fa-check"></i>
+                            </td>
+                    </tr>
+                </tbody>
+                <tr id="row3" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                    <td>Chez Lorna</td>
+                    <td>3</td>
+                    <td>8001</td>
+                    <td>8348</td>
+                    <td>16.4%</td>
+                    <td>16.6%</td>
+                    <td>&mdash;</td>
+                    <td>&mdash;</td>
+                    <td data-use-toggle>
+                        <i class="fa fa-check"></i>
+                    </td>
                 </tr>
-                <tr id="row2" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
-                    <td>Cell A</td>
-                    <td>Cell B</td>
+                <tr id="row4" draggable="true" ondragstart="drag(event)" ondragover="disallowDrop(event)">
+                    <td>Phil's Vape Store</td>
+                    <td>4</td>
+                    <td>1152</td>
+                    <td>1018</td>
+                    <td>2.4%</td>
+                    <td>2.0%</td>
+                    <td>&mdash;</td>
+                    <td>&mdash;</td>
+                    <td data-use-toggle>
+                        <i class="fa fa-check"></i>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -107,17 +224,33 @@
 
         <table id="table-locations-to-validate" ondrop="dropIntoBottomTable(event)" ondragover="allowDrop(event)">
             <thead>
-                <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th></th>
-                </tr>
-            </thead>
+                    <tr>
+                            <th colspan="2"></th>
+                            <th colspan="2">Validated</th>
+                            <th colspan="2">Weight</th>
+                            <th colspan="2">Estimate</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Location Name</th>
+                            <th>Number</th>
+                            <th>In</th>
+                            <th>Out</th>
+                            <th>In</th>
+                            <th>Out</th>
+                            <th>In</th>
+                            <th>Out</th>
+                            <th></th>
+                        </tr>
+                    </thead>
             <tbody>
                 <tr id="table-placeholder-row">
-                    <td class="table-placeholder" colspan="3">Drag locations to estimate from the table above and drop them here.</td>
+                    <td class="table-placeholder" colspan="9">Drag the locations that you want to estimate from the table above and drop them
+                        here.</td>
                 </tr>
             </tbody>
         </table>
-    </body>
+    </div>
+</body>
+
 </html>
