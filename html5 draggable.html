@@ -113,10 +113,17 @@
             var id = ev.dataTransfer.getData("dragged row");
             var tr = $(`#${id}`);
             $(tr)
+                .find("td[data-estimate-in]")
+                .remove();
+            $(tr)
+                .find("td[data-estimate-out]")
+                .remove();
+            $(tr)
                 .find("td[data-revalidate-button]")
                 .remove();
             $(tr)    
-                .append("<td data-use-toggle><i class='fa fa-check'></i></td>");
+                .append("<td data-use-toggle><i class='fa fa-check'></i></td>")
+                .removeClass("disabled");
 
             $(ev.target)
                 .closest("table")
@@ -136,12 +143,15 @@
 
             var id = ev.dataTransfer.getData("dragged row");
             var tr = $(`#${id}`);
-            $(tr)
+
+            $(tr)    
+                .append("<td data-estimate-in>&mdash;</td>")
+                .append("<td data-estimate-out>&mdash;</td>")
+                .append("<td data-revalidate-button><button class='btn btn-xs disabled active'>Save Estimates</Button></td>")
                 .removeClass("disabled")
                 .find("td[data-use-toggle]")
                 .remove();
-            $(tr)    
-                .append("<td data-revalidate-button><button class='btn btn-xs disabled active'>Save Estimates</Button></td>");
+
 
             $(ev.target)
                 .closest("table")
@@ -181,6 +191,7 @@
             $("#table-locations-to-validate [data-estimate-in]").html("123")
             $("#table-locations-to-validate [data-estimate-out]").html("456")
             $("td[data-revalidate-button] button").removeClass("disabled");
+            $("#calculate-estimates").addClass("disabled");
         }
     </script>
 </head>
@@ -193,14 +204,11 @@
                     <th colspan="2"></th>
                     <th colspan="2">Validated</th>
                     <th colspan="2">Weight</th>
-                    <th colspan="2">Estimate</th>
                     <th>Use</th>
                 </tr>
                 <tr>
                     <th>Location Name</th>
                     <th>Number</th>
-                    <th>In</th>
-                    <th>Out</th>
                     <th>In</th>
                     <th>Out</th>
                     <th>In</th>
@@ -216,8 +224,6 @@
                     <td>8348</td>
                     <td>16.4%</td>
                     <td>16.6%</td>
-                    <td data-estimate-in>&mdash;</td>
-                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
@@ -229,8 +235,6 @@
                     <td>1018</td>
                     <td>2.4%</td>
                     <td>2.0%</td>
-                    <td data-estimate-in>&mdash;</td>
-                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
@@ -242,8 +246,6 @@
                     <td>8348</td>
                     <td>16.4%</td>
                     <td>16.6%</td>
-                    <td data-estimate-in>&mdash;</td>
-                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
@@ -255,8 +257,6 @@
                     <td>1018</td>
                     <td>2.4%</td>
                     <td>2.0%</td>
-                    <td data-estimate-in>&mdash;</td>
-                    <td data-estimate-out>&mdash;</td>
                     <td data-use-toggle>
                         <i class="fa fa-check"></i>
                     </td>
